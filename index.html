@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Foundery — Build anything with your kid + AI</title>
+<meta name="description" content="AI-powered project prompt generator for kids. Pick an interest, get a ready-to-paste prompt, build together.">
+<meta property="og:title" content="Pixel Foundery — Build anything with your kid + AI">
+<meta property="og:description" content="AI-powered project prompt generator for kids. Pick an interest, get a ready-to-paste prompt, build together.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pixelfoundery.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pixel Foundery — Build anything with your kid + AI">
+<meta name="twitter:description" content="AI-powered project prompt generator for kids. Pick an interest, get a ready-to-paste prompt, build together.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF9F5;
+  --card-bg: white;
+  --text: #2D2D2D;
+  --text-muted: #666;
+  --text-light: #999;
+  --border: #E8E8E8;
+  --input-bg: #FAFAFA;
+  --turquoise: #14B9A7;
+  --pink: #FC1086;
+  --neon: #D9FB89;
+  --shadow: rgba(0,0,0,0.06);
+  --pink-shadow: rgba(252,16,134,0.3);
+  --cta-bg: #F8F8F8;
+  --prompt-bg: #F5F5F5;
+  --prompt-border: #E8E8E8;
+  --on-accent: white;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0F0F1A;
+    --card-bg: #1A1A2E;
+    --text: #F0F0F0;
+    --text-muted: #999;
+    --text-light: #666;
+    --border: #2A2A3E;
+    --input-bg: #1A1A2E;
+    --turquoise: #D9FB89;
+    --shadow: rgba(0,0,0,0.2);
+    --pink-shadow: rgba(252,16,134,0.25);
+    --cta-bg: #1A1A2E;
+    --prompt-bg: #12122080;
+    --prompt-border: #2A2A3E;
+    --on-accent: #0F0F1A;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.container { max-width: 560px; margin: 0 auto; padding: 0 1.5rem; }
+.hero { text-align: center; padding: 3rem 1.5rem 2rem; }
+.hero .mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--turquoise); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; }
+.hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.15; margin: 0.5rem 0; letter-spacing: -0.02em; }
+.hero h1 span { color: var(--pink); }
+.hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 500px; margin: 0 auto; line-height: 1.5; }
+.form-card { max-width: 480px; margin: 0 auto 2rem; background: var(--card-bg); border-radius: 20px; padding: 2rem; box-shadow: 0 4px 24px var(--shadow); }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--turquoise); }
+.age-row { display: flex; gap: 0.5rem; }
+.age-btn { flex: 1; padding: 0.7rem; border: 2px solid var(--border); border-radius: 12px; background: var(--input-bg); color: var(--text-muted); font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.2s; }
+.age-btn:hover { border-color: var(--turquoise); color: var(--turquoise); }
+.age-btn.active { background: var(--turquoise); color: var(--on-accent); border-color: var(--turquoise); }
+.interests { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.interest-pill { padding: 0.5rem 1rem; border: 2px solid var(--border); border-radius: 999px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: var(--card-bg); color: var(--text); }
+.interest-pill:hover { border-color: var(--pink); }
+.interest-pill.active { background: var(--pink); color: white; border-color: var(--pink); }
+.custom-input { display: none; margin-top: 0.5rem; padding: 0.6rem 1rem; border: 2px solid var(--pink); border-radius: 12px; background: var(--input-bg); color: var(--text); font-family: 'Nunito', sans-serif; font-size: 0.9rem; width: 100%; outline: none; }
+.custom-input.visible { display: block; }
+.categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.cat-btn { padding: 0.75rem 0.5rem; border: 2px solid var(--border); border-radius: 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: var(--card-bg); text-align: center; color: var(--text); }
+.cat-btn:hover { border-color: var(--turquoise); }
+.cat-btn.active { background: var(--turquoise); color: var(--on-accent); border-color: var(--turquoise); }
+.cat-btn .icon { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+.generate-btn { width: 100%; padding: 1rem; background: var(--pink); color: white; border: none; border-radius: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 12px var(--pink-shadow); }
+.generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px var(--pink-shadow); }
+.generate-btn:active { transform: translateY(0); }
+.result-card { max-width: 480px; margin: 0 auto 2rem; background: var(--card-bg); border-radius: 20px; padding: 2rem; box-shadow: 0 4px 24px var(--shadow); display: none; opacity: 0; transform: translateY(-10px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.result-card.visible { display: block; opacity: 1; transform: translateY(0); }
+.result-card .prompt-box { background: var(--prompt-bg); border: 1px solid var(--prompt-border); border-radius: 12px; padding: 1.25rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; margin-bottom: 1rem; border-left: 4px solid var(--turquoise); color: var(--text); }
+.btn-row { display: flex; gap: 0.5rem; }
+.copy-btn { flex: 1; padding: 0.75rem 1.5rem; background: var(--turquoise); color: var(--on-accent); border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.9rem; font-family: 'Nunito', sans-serif; }
+.try-again { flex: 1; padding: 0.75rem 1.5rem; background: none; color: var(--pink); border: 2px solid var(--pink); border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.9rem; font-family: 'Nunito', sans-serif; }
+.cta-bar { max-width: 480px; margin: 0 auto 2rem; padding: 1.5rem; background: var(--cta-bg); border-radius: 16px; text-align: center; }
+.cta-bar p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.cta-bar a { display: inline-block; padding: 0.6rem 1.5rem; background: var(--pink); color: white; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
+footer { text-align: center; padding: 2rem; font-size: 0.85rem; color: var(--text-light); }
+footer a { color: var(--turquoise); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="mono">Pixel Foundery</div>
+  <h1>Build <span>anything</span><br>with your kid + AI</h1>
+  <p>Pick an interest. Get a prompt. Paste into any AI. Build something cool in 5 minutes.</p>
+</div>
+<div class="container">
+  <div class="form-card">
+    <div class="form-group">
+      <label>👶 How old is your kid?</label>
+      <div class="age-row" id="ageRow">
+        <div class="age-btn" data-age="2">2</div>
+        <div class="age-btn" data-age="3">3</div>
+        <div class="age-btn" data-age="4">4</div>
+        <div class="age-btn" data-age="5">5</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>💛 What are they into?</label>
+      <div class="interests" id="interests">
+        <div class="interest-pill" data-interest="cars and trucks">🚗 Cars & Trucks</div>
+        <div class="interest-pill" data-interest="dinosaurs">🦕 Dinosaurs</div>
+        <div class="interest-pill" data-interest="space">🚀 Space</div>
+        <div class="interest-pill" data-interest="animals">🐾 Animals</div>
+        <div class="interest-pill" data-interest="building and construction">🏗️ Building</div>
+        <div class="interest-pill" data-interest="cooking and food">🧁 Cooking</div>
+        <div class="interest-pill" data-interest="art and colors">🎨 Art</div>
+        <div class="interest-pill" data-interest="custom">✨ Custom...</div>
+      </div>
+      <input type="text" class="custom-input" id="customInput" placeholder="Type their interest...">
+    </div>
+    <div class="form-group">
+      <label>🛠️ What should we build?</label>
+      <div class="categories" id="categories">
+        <div class="cat-btn" data-cat="game"><span class="icon">🎮</span>First Game</div>
+        <div class="cat-btn" data-cat="story"><span class="icon">📖</span>Story</div>
+        <div class="cat-btn" data-cat="art"><span class="icon">🎨</span>Art Tool</div>
+        <div class="cat-btn" data-cat="science"><span class="icon">🔬</span>Science</div>
+        <div class="cat-btn" data-cat="math"><span class="icon">🧮</span>Math</div>
+        <div class="cat-btn" data-cat="music"><span class="icon">🎵</span>Music</div>
+      </div>
+    </div>
+    <button class="generate-btn" id="generateBtn">✨ Generate Prompt</button>
+  </div>
+  <div class="result-card" id="resultCard">
+    <div class="prompt-box" id="promptBox"></div>
+    <div class="btn-row">
+      <button class="copy-btn" id="copyBtn">📋 Copy Prompt</button>
+      <button class="try-again" id="tryAgainBtn">🔄 Try Another</button>
+    </div>
+  </div>
+  <div class="cta-bar">
+    <p>Want a full 12-week curriculum for teaching computational thinking?</p>
+    <a href="https://raisingpixels.dev">Get the free intro chapter →</a>
+  </div>
+  <footer>
+    Made by <a href="https://meimakes.com">@meimakes</a> · <a href="https://raisingpixels.dev">Raising Pixels</a>
+  </footer>
+</div>
+<script>
+const CONFIG = {
+  useAI: false,
+  apiEndpoint: '',
+  apiKey: '',
+};
+
+const TEMPLATES = {
+  game: [
+    `Build me a single HTML file: a tap-to-jump game for a {age}-year-old who loves {interest}.
+
+The game: A {interest}-themed character runs across the screen automatically. Tap anywhere or press spacebar to jump over obstacles. Each successful jump earns a star and plays a fun bounce sound (use Web Audio API to generate a cheerful "boing").
+
+Requirements:
+- Single HTML file, no external dependencies
+- Touch-friendly with a huge tap zone (the entire screen)
+- Bright, saturated colors with chunky shapes (no thin lines)
+- Character and obstacles should be drawn with CSS/SVG (no external images)
+- Speed increases very gradually — keep it beatable for a {age}-year-old
+- Show a big star counter at the top
+- Every 5 stars: celebratory screen with confetti animation and a happy sound
+- Restart automatically after losing (no "game over" screen — just a brief fun animation and go again)
+- No text reading required — all visual/audio feedback
+- Must work on mobile Safari and Chrome`,
+
+    `Build me a single HTML file: a catch-the-falling-objects game for a {age}-year-old who loves {interest}.
+
+The game: {interest}-themed objects fall from the top of the screen. The player moves a basket/net left and right by touching the left or right half of the screen (or arrow keys). Catching items plays a satisfying "pop" sound and adds points. Missing items is fine — no penalty, no game over.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Objects should be large (at least 60px) and {interest}-themed using emoji or CSS shapes
+- Fall speed should be gentle — a {age}-year-old needs time to react
+- Touch controls: tap left half = move left, tap right half = move right. Also support arrow keys.
+- Big score display with fun animations when catching
+- Background color changes every 10 points to keep it visually fresh
+- Celebratory dance animation at 25 points
+- Sound effects via Web Audio API (catch sound, milestone sound)
+- No reading required — purely visual
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a whack-a-mole style tapping game for a {age}-year-old who loves {interest}.
+
+The game: {interest}-themed characters pop up in a 2x2 grid (keep it simple for age {age}). Tap them before they hide! Each tap plays a silly sound and shows a fun animation (stars, sparkles). Characters stay visible for a generous amount of time (2-3 seconds).
+
+Requirements:
+- Single HTML file, no external dependencies
+- Large grid cells (at least 120px each) with rounded corners
+- Characters use emoji or CSS art — make them {interest}-themed and adorable
+- Gentle pacing appropriate for a {age}-year-old (no stress)
+- Tap feedback: satisfying pop sound (Web Audio API), cell lights up, star burst animation
+- Score counter with big numerals
+- Every 10 taps: celebration screen with bouncing emoji and a cheerful tune
+- No reading required — all communication through visuals and sounds
+- Touch-friendly, works on phones and tablets
+- Bright, warm color palette`,
+
+    `Build me a single HTML file: a simple matching/memory game for a {age}-year-old who loves {interest}.
+
+The game: A small grid of face-down cards with {interest}-themed emoji on them. Tap to flip a card, then tap another — if they match, they stay face up with a happy sound and sparkle animation. If not, they flip back gently.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Cards should be large (fill most of the screen), with rounded corners and a fun back-design
+- Use {interest}-themed emoji as the card faces
+- Flip animation using CSS transforms (smooth 3D flip)
+- Sound effects: flip sound, match sound, win celebration sound (all Web Audio API)
+- When all matched: big celebration with confetti, bouncing emoji, and a replay button (just a big colorful circle with a ↻ arrow)
+- No text — everything communicated visually
+- Gentle timing — cards that don't match stay visible for 2 seconds before flipping back
+- Touch-friendly, works on mobile Safari and Chrome
+- Cheerful pastel color scheme`,
+
+    `Build me a single HTML file: a simple racing/driving game for a {age}-year-old who loves {interest}.
+
+The game: A {interest}-themed vehicle drives forward automatically on a straight road. Tap left side or right side of screen to steer. Collect {interest}-themed bonus items on the road for points. The road gently curves and has simple obstacles to dodge.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Top-down view, road scrolls downward to simulate driving forward
+- Vehicle and items drawn with CSS/emoji — {interest}-themed
+- Controls: touch left half = steer left, touch right half = steer right. Arrow keys too.
+- Generous hitboxes — a {age}-year-old should succeed most of the time
+- Collecting items: satisfying "ding" sound, item pops with animation
+- Speed is slow and comfortable — this is about the joy of driving, not difficulty
+- Bright, colorful road with fun roadside decorations
+- Score display at top, milestone celebrations every 10 items
+- No reading — all visual and audio
+- Works on mobile and desktop`
+  ],
+
+  story: [
+    `Build me a single HTML file: a choose-your-own-adventure story for a {age}-year-old who loves {interest}.
+
+The story: A {interest}-themed adventure with a cute main character. Each "page" shows a big illustration scene (built with CSS/emoji art — colorful backgrounds, positioned emoji characters) and 2 choice buttons at the bottom with emoji icons (no reading needed — each button has a big emoji showing what happens).
+
+Requirements:
+- Single HTML file, no external dependencies
+- At least 8 story nodes with 2 branches — keep the story tree simple but satisfying
+- Each scene has: a colorful CSS background, large emoji characters positioned in a scene, and gentle ambient sound
+- Choice buttons are huge (full-width, stacked), with a big emoji icon and optional short label
+- Page transitions: smooth fade or slide animation
+- Sound effect when making a choice (whoosh) and scene-specific ambient sounds (Web Audio API)
+- Story should be {interest}-themed: the characters, settings, and choices all relate to {interest}
+- Happy endings for every path — no scary or sad outcomes for a {age}-year-old
+- A "start over" button (big circle with ↻) on the final page
+- Works on mobile, big touch targets`,
+
+    `Build me a single HTML file: an interactive storybook for a {age}-year-old who loves {interest}.
+
+The storybook: A 6-page story about a {interest}-themed adventure. Each page has a big visual scene made with CSS/emoji art. Tap elements in the scene to make things happen — animals move, objects bounce, sounds play. Swipe or tap an arrow to go to the next page.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Each page: full-screen colorful background with positioned emoji creating a scene
+- At least 3 interactive elements per page (tap to animate/sound)
+- Tap interactions: emoji bounce, spin, grow, or wiggle with CSS animations
+- Sound effects for each interaction (Web Audio API — pops, boings, whooshes)
+- Navigation: big arrow buttons on sides, or swipe gesture support
+- Page transition animations (slide left/right)
+- Story arc about {interest} that's appropriate for age {age}
+- Final page has a celebration with confetti
+- No reading required — the story is told through pictures and sounds
+- Works on mobile and tablet`,
+
+    `Build me a single HTML file: a character creator story for a {age}-year-old who loves {interest}.
+
+The app: First, build a character by tapping through choices (3 screens: pick a body from 4 options, pick a color from 6 swatches, pick an accessory from 4 options). All options are {interest}-themed. Then the character appears in a short 4-scene story with simple tap interactions.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Character built from layered CSS/emoji elements
+- Selection screens: big option cards in a 2x2 grid, tap to select (highlighted border)
+- Each selection plays a fun sound (Web Audio API)
+- After creation: character appears in scenes with {interest}-themed backgrounds
+- Each scene has tap-to-interact elements (character waves, jumps, dances)
+- Bright, friendly color palette appropriate for age {age}
+- "Create Another" button at the end with a sparkle animation
+- No reading — emoji labels and visual choices only
+- Smooth transitions between screens
+- Touch-friendly, works on mobile`,
+
+    `Build me a single HTML file: a story with sounds for a {age}-year-old who loves {interest}.
+
+The app: A simple 5-scene visual story about {interest}. Each scene fills the screen with a CSS gradient background and large emoji art. The twist: each scene has 3-4 sound buttons at the bottom — tap them to add sound effects to the scene (animal sounds, vehicle sounds, nature sounds — all {interest}-themed). The sounds are generated with Web Audio API.
+
+Requirements:
+- Single HTML file, no external dependencies
+- 5 scenes with beautiful CSS gradient backgrounds and emoji compositions
+- Each scene has 3-4 large sound buttons (emoji icon, circular, ~80px)
+- Sound buttons generate sounds via Web Audio API (oscillators shaped into fun sounds)
+- Tapping a sound button: button pulses, emoji in the scene reacts (bounces/wiggles)
+- Navigation arrows between scenes (big, colorful)
+- Scenes tell a simple {interest}-themed story arc
+- Age-appropriate for {age}: simple, cheerful, no scary elements
+- Final scene: all sound buttons trigger a celebration symphony
+- Works on mobile, all touch targets at least 60px`
+  ],
+
+  art: [
+    `Build me a single HTML file: a finger painting / drawing app for a {age}-year-old who loves {interest}.
+
+The app: A full-screen canvas for drawing with touch or mouse. A toolbar at the bottom has 6 big color circles to pick from (bright, fun colors) and a {interest}-themed stamp button. Drawing uses thick, chunky lines (30px+). The stamp button places a random {interest}-themed emoji where you tap.
+
+Requirements:
+- Single HTML file, no external dependencies
+- HTML Canvas API for drawing
+- Thick brush strokes (30px minimum — toddler-friendly)
+- Color palette: 6 bright colors in large circles (60px+) at the bottom
+- {interest}-themed stamps: tap the stamp button, then tap canvas to place emoji
+- Clear button (big 🗑️ icon) with a fun "whoosh" erase animation
+- Drawing sound: gentle continuous tone while drawing (Web Audio API)
+- Stamp sound: pop/sparkle on placement
+- Canvas fills the screen above the toolbar
+- Touch-optimized: smooth line drawing that follows finger accurately
+- Undo button (↩️) that removes last stroke
+- Works on mobile Safari and Chrome, no scrolling issues`,
+
+    `Build me a single HTML file: a pixel art maker for a {age}-year-old who loves {interest}.
+
+The app: An 8x8 grid of large squares fills most of the screen. Tap a square to fill it with the selected color. A color picker at the bottom shows 8 bright colors. Pre-loaded {interest}-themed templates show as faint guides in the grid that kids can color in.
+
+Requirements:
+- Single HTML file, no external dependencies
+- 8x8 grid with large cells (fill available width, at least 40px each)
+- Tap to fill cell with current color, tap again to clear
+- Color picker: 8 circles at bottom, selected one has a ring/bounce
+- 3 template options (toggle between them with arrow buttons): each is a simple {interest}-themed pixel pattern shown as faint colored guides
+- Satisfying "pop" sound on each cell tap (Web Audio API)
+- "Clear All" button with confetti-in-reverse animation
+- Grid cells have subtle rounded corners and spacing
+- Touch-friendly — cells respond instantly to taps
+- Save button: triggers a celebration animation (this is the "done!" moment)
+- Appropriate difficulty for age {age} — simple shapes, big cells
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a stamp art tool for a {age}-year-old who loves {interest}.
+
+The app: A white canvas fills the screen. At the bottom, a scrollable row of {interest}-themed emoji stamps (8-10 options). Tap a stamp to select it, then tap anywhere on the canvas to place it. Each placed stamp appears with a fun pop-in animation and sound. Stamps can be different sizes — toggle between small/medium/large with a size button.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Canvas area: white or light background, fills most of the screen
+- Stamp selector: horizontal scrolling row of large emoji (60px+), selected one has highlight ring
+- Place stamps by tapping canvas — stamp appears with CSS pop animation (scale 0 → 1 with bounce)
+- Placement sound: cheerful "pop" via Web Audio API
+- Size toggle: 3 sizes shown as small/medium/large circles
+- Clear canvas button with a fun animation
+- {interest}-themed emoji set (at least 8 stamps related to {interest})
+- Stamps are randomly slightly rotated (±15°) for a natural, playful look
+- Touch-optimized, works on phones and tablets
+- Age-appropriate for {age}: big buttons, simple interface`,
+
+    `Build me a single HTML file: a coloring page app for a {age}-year-old who loves {interest}.
+
+The app: A large {interest}-themed outline drawing made with SVG paths on a white background. Tap a region to fill it with the selected color. A color palette at the bottom has 8 bright colors. The outline drawing should be simple with large fill regions appropriate for age {age}.
+
+Requirements:
+- Single HTML file, no external dependencies
+- SVG-based outline drawing with {interest}-themed shapes (simple, chunky outlines)
+- At least 8-10 fillable regions, each large enough to tap easily
+- Color picker: 8 circles at the bottom, selected has a highlight ring
+- Tap a region → fills with selected color, plays a satisfying sound
+- Smooth fill animation (fade or wipe in)
+- 3 different coloring pages (cycle with arrow buttons)
+- "Done!" button triggers a celebration: the artwork bounces and confetti falls
+- Sound effects via Web Audio API (fill sound, celebration sound)
+- Touch-friendly, regions have generous tap areas
+- Works on mobile and desktop
+- Cheerful, bright default outline colors`
+  ],
+
+  science: [
+    `Build me a single HTML file: a color mixing lab for a {age}-year-old who loves {interest}.
+
+The app: Three big "paint tube" buttons at the top (Red, Yellow, Blue) styled as {interest}-themed containers. Tap a tube to add a drip to the mixing bowl in the center. The bowl changes color in real-time as colors are mixed (actual color blending math). A splash sound plays for each drip. {interest}-themed character reacts to each new color.
+
+Requirements:
+- Single HTML file, no external dependencies
+- 3 primary color buttons (large, chunky, {interest}-themed styling)
+- Central mixing bowl: large circle/container that smoothly transitions colors
+- Real color mixing: red+yellow=orange, red+blue=purple, yellow+blue=green, all three=brown
+- Drip animation: colored drop falls from tube to bowl (CSS animation)
+- Sound: splash/drip sounds via Web Audio API
+- {interest}-themed character (emoji) below the bowl reacts with different expressions for each mixed color
+- "Pour it out!" button resets the bowl with a fun pouring animation
+- Color result label shown as a colored circle (no text reading needed)
+- Age-appropriate for {age}: big buttons, slow animations, impossible to fail
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a plant growing simulator for a {age}-year-old who loves {interest}.
+
+The app: A {interest}-themed garden scene. A plant pot sits in the center. Three action buttons: ☀️ Sun, 💧 Water, 🎵 Music. Tap each to "give" the plant what it needs. The plant grows in stages (seed → sprout → stem → leaves → flower). Each stage requires tapping a few buttons. The plant and garden are {interest}-themed.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Plant growth shown via CSS animations: seed grows into a sprout, then stem, then leaves, then flower
+- Each growth stage requires 3 taps (any combination of the 3 buttons)
+- Buttons are large (80px+), with bounce animation on tap
+- Sound effects: water splash, sunshine chime, music note (Web Audio API)
+- {interest}-themed: the flower/plant, pot decoration, and background relate to {interest}
+- Growth animation: smooth CSS transitions between stages
+- When fully grown: celebration with sparkles and a happy song
+- "Plant again!" button resets with a seed-dropping animation
+- Progress indicator: simple dots or icons showing growth stage
+- Age-appropriate for {age}: every tap makes something happen, no wrong choices
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a weather simulator for a {age}-year-old who loves {interest}.
+
+The app: A {interest}-themed landscape scene. Four big weather buttons along the bottom: ☀️ 🌧️ ⛈️ 🌈. Tapping each changes the entire scene — sky color transitions smoothly, weather particles appear (CSS animations for rain, snow, sun rays), and {interest}-themed characters in the scene react to the weather.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Landscape scene built with CSS: sky gradient, ground, {interest}-themed elements (emoji characters, buildings, vehicles)
+- 4 weather modes with smooth transitions between them
+- Sun: bright yellow sky, sun rays animation, characters happy
+- Rain: grey-blue sky, CSS raindrop particles falling, puddle animations, characters have umbrellas
+- Storm: dark sky, lightning flash animation, wind effect on scene elements, thunder sound
+- Rainbow: all colors, rainbow arc CSS gradient, sparkle particles, characters celebrating
+- Weather sounds via Web Audio API (rain patter, thunder crack, sunshine chime)
+- {interest}-themed characters and landscape elements
+- Large buttons (70px+) with the weather emoji, selected one highlighted
+- Age-appropriate for {age}: mesmerizing to watch, every button does something cool
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a gravity/physics playground for a {age}-year-old who loves {interest}.
+
+The app: Tap anywhere on screen to drop a {interest}-themed object (emoji). Objects fall with simple gravity physics and bounce off the floor and each other. Tap rapidly to create a pile! A toolbar at the bottom lets you pick which {interest}-themed object to drop (4 options).
+
+Requirements:
+- Single HTML file, no external dependencies
+- Simple 2D physics: gravity, floor collision with bounce (damping), objects stack roughly
+- Objects are large emoji (50px+), {interest}-themed (4 types to choose from)
+- Tap to spawn: object appears at tap point and falls
+- Bounce sound on collision (Web Audio API — pitch varies with object type)
+- Object selector: 4 large emoji buttons at the bottom, selected one highlighted
+- "Shake!" button: applies random forces to all objects (they fly around briefly)
+- "Clear" button: objects fade out with a sparkle animation
+- Limit to ~30 objects on screen (oldest ones fade when limit hit)
+- Fun to watch physics — a {age}-year-old will just enjoy tapping and watching things fall
+- Works on mobile and desktop, touch-optimized`
+  ],
+
+  math: [
+    `Build me a single HTML file: a counting game for a {age}-year-old who loves {interest}.
+
+The game: {interest}-themed objects appear on screen (1 to a few objects). Below them, number buttons show the possible answers. Tap the correct number! The objects bounce and animate while waiting. Correct answer: celebratory sound and star animation. Then new round with a different count.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Objects are large {interest}-themed emoji (80px+), arranged clearly and countable
+- Objects have idle animation (gentle bounce, wobble) to keep attention
+- Number buttons: large circles (80px+) with big numerals
+- Correct answer: happy sound, objects do a celebration dance, star burst, score increases
+- Wrong answer: gentle "try again" wobble (no negative feedback — just try again)
+- Difficulty appropriate for age {age}: start with counts of 1-a few
+- Score shown as collected stars at the top
+- Every 5 correct: big celebration screen with confetti
+- Sound effects via Web Audio API (pop for tap, fanfare for correct, gentle buzz for wrong)
+- No reading required — pure visual number recognition
+- Works on mobile and desktop, touch-friendly`,
+
+    `Build me a single HTML file: a shape matching game for a {age}-year-old who loves {interest}.
+
+The game: A large target shape appears at the top (circle, square, triangle, star — drawn with CSS in fun colors). Below, 3-4 option shapes appear. Tap the matching one! {interest}-themed decorations and characters surround the play area.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Shapes drawn with CSS (border-radius, clip-path, etc.) — large, colorful, distinct
+- Target shape: centered at top, 150px+, with a subtle pulsing animation
+- Option shapes: row at bottom, 100px+ each, clearly tappable
+- Correct match: shapes merge with a satisfying animation, sparkle effect, happy sound
+- Wrong tap: shape gently wiggles, "not quite" sound (encouraging, not punishing)
+- After correct match: new round with different shape and colors
+- {interest}-themed background and decorations (emoji border, themed colors)
+- Score as stars collected, milestone celebrations every 5
+- Sound effects via Web Audio API
+- Difficulty for age {age}: a few simple shapes
+- Works on mobile, touch-friendly`,
+
+    `Build me a single HTML file: a bigger/smaller comparison game for a {age}-year-old who loves {interest}.
+
+The game: Two {interest}-themed objects appear side by side in different sizes. A big arrow prompt points up (meaning "tap the bigger one"). Tap the bigger object! It bounces up with a celebration. Objects are {interest}-themed emoji in varying sizes.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Two large {interest}-themed emoji side by side (different sizes — difference should be obvious for age {age})
+- Clear visual prompt: up arrow icon between them or above (no text needed)
+- Tap the bigger one: celebration animation (grows, sparkles, happy sound)
+- Tap the smaller one: gentle shake, encouraging sound, can try again
+- New pair each round with different {interest}-themed emoji
+- Size differences start very obvious, get slightly subtler over time
+- Score counter with star collection
+- Celebration at milestones (5, 10 correct)
+- Sound effects via Web Audio API
+- Background and decorations are {interest}-themed
+- Touch-friendly, works on mobile — big tap targets`,
+
+    `Build me a single HTML file: a simple addition game with objects for a {age}-year-old who loves {interest}.
+
+The game: Show two groups of {interest}-themed objects (e.g., 2 cars + 1 car). Below, show 3 number options. Tap the number that matches the total! Groups are visually separated by a big colorful "+" sign.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Objects are large {interest}-themed emoji (60px+), clearly grouped
+- Groups separated by a big, fun "+" symbol (colorful, animated)
+- Number options: 3 large circular buttons (only one correct)
+- Numbers range: 1+1 up to simple sums (age-appropriate for {age})
+- Correct: objects fly together, merge into the total count, celebration sound + confetti
+- Wrong: gentle nudge animation, can try again immediately
+- Score as stars, milestone celebrations
+- Sound effects via Web Audio API
+- {interest}-themed everything: objects, background colors, decorations
+- No text reading — just objects and numbers
+- Works on mobile, touch-friendly, large tap targets`,
+
+    `Build me a single HTML file: a pattern completion game for a {age}-year-old who loves {interest}.
+
+The game: A row of {interest}-themed emoji shows a pattern (e.g., 🚗🚙🚗🚙🚗❓). Below the row, 2-3 options. Tap the one that completes the pattern! The pattern fills in with a satisfying animation.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Pattern row: large emoji (60px+) in a horizontal row, last one is a pulsing "?" circle
+- Patterns use {interest}-themed emoji, simple AB or ABC patterns for age {age}
+- Option buttons: 2-3 large emoji below the pattern
+- Correct: "?" transforms into the right emoji with a pop animation, row does a wave animation, happy sound
+- Wrong: option shakes gently, try again
+- New pattern each round, gradually introduces variety
+- Score counter with stars
+- Celebrations at milestones
+- Sound effects via Web Audio API
+- Bright, fun colors — {interest}-themed palette
+- Works on mobile, touch-friendly`
+  ],
+
+  music: [
+    `Build me a single HTML file: a drum machine for a {age}-year-old who loves {interest}.
+
+The app: A 2x2 grid of big, colorful drum pads (each a different bright color). Each pad plays a different percussion sound when tapped and lights up with a visual pulse animation. Pads are {interest}-themed (the icons on each pad relate to {interest}).
+
+Requirements:
+- Single HTML file, no external dependencies
+- 2x2 grid of drum pads, each filling a quarter of the play area (big!)
+- Each pad: distinct bright color, {interest}-themed emoji icon in the center
+- Tap: pad lights up brightly, scale animation (press in/out), plays a unique drum sound
+- Sounds generated via Web Audio API: kick, snare, hi-hat, cymbal (synthesized, not samples)
+- Visual feedback: ripple/pulse animation radiating from center of tapped pad
+- Pads have rounded corners and subtle shadows
+- Background color slowly cycles through gentle gradients
+- Auto-play mode button: toggles a simple beat pattern (pads light up automatically in sequence)
+- {interest}-themed styling: background decorations, pad icons
+- Age-appropriate for {age}: impossible to do wrong, every tap makes music
+- Works on mobile and desktop, responsive layout`,
+
+    `Build me a single HTML file: a piano/keyboard for a {age}-year-old who loves {interest}.
+
+The app: 8 large, colorful piano keys spanning the bottom 2/3 of the screen (one octave, C to C). Each key is a different bright color with a {interest}-themed emoji. Tap a key to play the note and see a visual note float upward. The top area shows floating notes creating a visual song.
+
+Requirements:
+- Single HTML file, no external dependencies
+- 8 keys, each a different rainbow color, filling the width of the screen
+- Keys are tall (at least 200px) for easy tapping by a {age}-year-old
+- Each key plays its musical note via Web Audio API (sine wave, correct frequency for C major scale)
+- Visual: when key pressed, a colored circle with the key's emoji floats upward and fades
+- Keys light up when pressed (brighter shade)
+- {interest}-themed emoji on each key as decoration
+- "Magic mode" button: auto-plays a simple melody (like Twinkle Twinkle) with keys lighting up
+- Background: dark or gentle gradient to make colorful keys pop
+- Touch-friendly, multi-touch support if possible
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: an animal/themed sound mixer for a {age}-year-old who loves {interest}.
+
+The app: A grid of 6 big circular buttons, each with a {interest}-themed emoji. Tap a button to start its loop playing (it lights up and pulses). Tap again to stop it. Multiple sounds can play simultaneously to create a mix! Each sound is a short rhythmic loop.
+
+Requirements:
+- Single HTML file, no external dependencies
+- 2x3 grid of large circular buttons (100px+ diameter)
+- Each button: bright color, {interest}-themed emoji, pulsing animation when active
+- Sounds generated via Web Audio API: each creates a distinct rhythmic pattern using oscillators
+- Toggle behavior: tap to start loop, tap again to stop
+- Active buttons glow and pulse to the rhythm
+- Multiple loops play in sync (quantized to a shared tempo)
+- Visual: particles or waves emanate from active buttons
+- "Stop all" button clears everything with a fade-out
+- {interest}-themed: sounds try to evoke {interest} (e.g., engine rhythms for cars, stomping for dinosaurs)
+- Age-appropriate for {age}: every combination sounds decent, no wrong choices
+- Works on mobile and desktop`,
+
+    `Build me a single HTML file: a rhythm tapping game for a {age}-year-old who loves {interest}.
+
+The game: {interest}-themed emoji fall from the top toward a "tap zone" line near the bottom. Tap when they reach the line! A simple rhythm plays in the background. Successful taps add to the music and create visual effects.
+
+Requirements:
+- Single HTML file, no external dependencies
+- Emoji fall in a single column (centered, simple for age {age})
+- Tap zone: a bright glowing horizontal line near the bottom
+- Timing is very generous — large hit window for a {age}-year-old
+- Successful tap: emoji explodes into particles, adds a musical note to the backing track
+- Missed (emoji passes the line): it just fades out, no penalty
+- Backing track: simple beat generated with Web Audio API
+- Falling emoji are large (60px+) and {interest}-themed
+- Speed is gentle and steady
+- Score counter, milestone celebrations
+- Visual flair: background pulses gently with the beat, successful hits create ripples
+- Works on mobile, big tap zone`,
+
+    `Build me a single HTML file: a music box / melody maker for a {age}-year-old who loves {interest}.
+
+The app: An 8x4 grid. Columns are time steps, rows are notes (4 pitches). Tap a cell to toggle it on (fills with a {interest}-themed emoji and color). Press a big "Play" button and the grid plays left to right, lighting up each column and playing the active notes. Creates a simple melody!
+
+Requirements:
+- Single HTML file, no external dependencies
+- 8 columns × 4 rows grid, cells are large and easily tappable (60px+ each)
+- Each row is a different color and pitch (C, E, G, high C — pentatonic-friendly)
+- Tap cell: toggles on/off with a pop animation and sound
+- Active cells show {interest}-themed emoji
+- Play button: big, centered below grid, {interest}-themed
+- Playback: cursor sweeps left to right, highlighting each column, playing active notes
+- Notes via Web Audio API (sine or triangle waves, pleasant tones)
+- Loop mode: playback loops continuously until stopped
+- Tempo appropriate for age {age} (not too fast)
+- "Clear" button to reset grid
+- Visual: active column glows during playback, cells bounce when their note plays
+- Works on mobile, touch-friendly`
+  ]
+};
+
+let state = {
+  age: null,
+  interest: null,
+  category: null,
+  lastTemplateIndex: -1,
+};
+
+// Age buttons
+document.getElementById('ageRow').addEventListener('click', e => {
+  const btn = e.target.closest('.age-btn');
+  if (!btn) return;
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.age = btn.dataset.age;
+});
+
+// Interest pills
+document.getElementById('interests').addEventListener('click', e => {
+  const pill = e.target.closest('.interest-pill');
+  if (!pill) return;
+  document.querySelectorAll('.interest-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  const customInput = document.getElementById('customInput');
+  if (pill.dataset.interest === 'custom') {
+    customInput.classList.add('visible');
+    customInput.focus();
+    state.interest = customInput.value || 'their favorite things';
+  } else {
+    customInput.classList.remove('visible');
+    state.interest = pill.dataset.interest;
+  }
+});
+
+document.getElementById('customInput').addEventListener('input', e => {
+  state.interest = e.target.value || 'their favorite things';
+});
+
+// Category buttons
+document.getElementById('categories').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-btn');
+  if (!btn) return;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.category = btn.dataset.cat;
+});
+
+function getPrompt(avoidIndex) {
+  const templates = TEMPLATES[state.category];
+  if (!templates) return '';
+  let idx;
+  if (templates.length === 1) {
+    idx = 0;
+  } else {
+    do {
+      idx = Math.floor(Math.random() * templates.length);
+    } while (idx === avoidIndex && templates.length > 1);
+  }
+  state.lastTemplateIndex = idx;
+  return templates[idx]
+    .replace(/\{age\}/g, state.age)
+    .replace(/\{interest\}/g, state.interest);
+}
+
+function showResult(prompt) {
+  const card = document.getElementById('resultCard');
+  document.getElementById('promptBox').textContent = prompt;
+  card.style.display = 'block';
+  // Trigger reflow for animation
+  card.offsetHeight;
+  card.classList.add('visible');
+  setTimeout(() => {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// Generate
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  if (!state.age || !state.interest || !state.category) {
+    // Highlight missing selections briefly
+    if (!state.age) document.getElementById('ageRow').style.animation = 'shake 0.3s';
+    setTimeout(() => document.getElementById('ageRow').style.animation = '', 300);
+    return;
+  }
+
+  if (CONFIG.useAI && CONFIG.apiEndpoint) {
+    try {
+      const res = await fetch(CONFIG.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(CONFIG.apiKey ? { 'Authorization': `Bearer ${CONFIG.apiKey}` } : {}),
+        },
+        body: JSON.stringify({ age: state.age, interest: state.interest, category: state.category }),
+      });
+      const data = await res.json();
+      if (data.prompt) {
+        showResult(data.prompt);
+        return;
+      }
+    } catch (e) {
+      // Fall back to templates
+    }
+  }
+
+  showResult(getPrompt(-1));
+});
+
+// Copy
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('promptBox').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = '📋 Copy Prompt'; }, 2000);
+  });
+});
+
+// Try Another
+document.getElementById('tryAgainBtn').addEventListener('click', () => {
+  if (!state.category) return;
+  const prompt = getPrompt(state.lastTemplateIndex);
+  document.getElementById('promptBox').textContent = prompt;
+  // Quick flash animation
+  const box = document.getElementById('promptBox');
+  box.style.opacity = '0';
+  setTimeout(() => { box.style.opacity = '1'; }, 150);
+});
+</script>
+</body>
+</html>

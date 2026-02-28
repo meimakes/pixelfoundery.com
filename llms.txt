@@ -1,0 +1,22 @@
+# Pixel Foundery
+
+> Build anything with your kid + AI
+
+Pixel Foundery is a prompt generator for parents who want to build things with their kids using AI chatbots (Claude, ChatGPT, Gemini). It generates ready-to-paste prompts that produce working single-file HTML projects.
+
+## What it does
+
+- Generates age-appropriate (2-5) project prompts based on kid's interests
+- 6 categories: games, stories, art tools, science experiments, math puzzles, music makers
+- 25+ prompt templates with age and interest personalization
+- Output is a complete prompt designed to produce a working HTML file
+
+## Who it's for
+
+Parents, homeschoolers, and teachers who want to use AI as a creative tool with young children. Solves the "blank prompt box" problem — you don't need to know what to ask for.
+
+## Links
+
+- Site: https://pixelfoundery.com
+- Newsletter: https://raisingpixels.dev
+- Author: https://meimakes.com
