@@ -9,9 +9,13 @@
 <meta property="og:description" content="AI-powered project prompt generator for kids. Pick an interest, get a ready-to-paste prompt, build together.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pixelfoundery.com">
+<meta property="og:image" content="https://pixelfoundery.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pixel Foundery — Build anything with your kid + AI">
 <meta name="twitter:description" content="AI-powered project prompt generator for kids. Pick an interest, get a ready-to-paste prompt, build together.">
+<meta name="twitter:image" content="https://pixelfoundery.com/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -154,9 +158,9 @@ footer a { color: var(--turquoise); text-decoration: none; }
 </div>
 <script>
 const CONFIG = {
-  useAI: false,
-  apiEndpoint: '',
-  apiKey: '',
+  useAI: true,
+  apiEndpoint: 'https://e098c7e0-c89c-42d0-8b77-667ae8560c51.web.createdevserver.com/api/chat',
+  apiKey: 'fxai_5e317e981beab4f64c65cb71669c5f3e3511418b',
 };
 
 const TEMPLATES = {
@@ -726,23 +730,59 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
   }
 
   if (CONFIG.useAI && CONFIG.apiEndpoint) {
+    const btn = document.getElementById('generateBtn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ Generating...';
+    btn.disabled = true;
     try {
+      const systemPrompt = `You are Pixel Foundery, an AI that generates creative, detailed prompts for building kid-friendly coding projects with AI tools like Claude or ChatGPT.
+
+Given a child's age, interest, and project type, generate a single detailed prompt that a parent can paste into any AI to build the project. The prompt should ask for a SINGLE HTML FILE with no external dependencies.
+
+Key requirements for every prompt:
+- Single HTML file, no external dependencies
+- Touch-friendly with large tap targets (60px+ minimum)
+- Bright, saturated colors with chunky shapes
+- All visuals via CSS/SVG/emoji (no external images)
+- Sound effects via Web Audio API (no audio files)
+- No reading required — all visual/audio feedback
+- Must work on mobile Safari and Chrome
+- Age-appropriate difficulty and pacing
+- Celebratory feedback for achievements
+- The child's interest should theme EVERYTHING (characters, objects, colors, sounds)
+
+Output ONLY the prompt text. No preamble, no explanation, no markdown formatting. Just the prompt a parent would paste.`;
+
+      const userMsg = `Generate a ${state.category} project prompt for a ${state.age}-year-old who loves ${state.interest}.`;
+
       const res = await fetch(CONFIG.apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(CONFIG.apiKey ? { 'Authorization': `Bearer ${CONFIG.apiKey}` } : {}),
+          'Authorization': `Bearer ${CONFIG.apiKey}`,
         },
-        body: JSON.stringify({ age: state.age, interest: state.interest, category: state.category }),
+        body: JSON.stringify({
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMsg },
+          ],
+          model: 'sonnet',
+          stream: false,
+        }),
       });
       const data = await res.json();
-      if (data.prompt) {
-        showResult(data.prompt);
+      const aiPrompt = data.message?.content || data.choices?.[0]?.message?.content;
+      if (aiPrompt) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        showResult(aiPrompt);
         return;
       }
     } catch (e) {
-      // Fall back to templates
+      console.error('AI generation failed, falling back to templates:', e);
     }
+    btn.textContent = originalText;
+    btn.disabled = false;
   }
 
   showResult(getPrompt(-1));
