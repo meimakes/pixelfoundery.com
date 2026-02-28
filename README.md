@@ -1,26 +1,38 @@
 # Pixel Foundery
 
-**Build anything with your kid + AI.**
+**Your kid can build apps before they can read.** This is the tool that makes it easy.
 
-Pixel Foundery solves the blank-prompt-box problem for parents. Pick your kid's age, what they're into, and what kind of project to build — get a ready-to-paste prompt that produces a working project in any AI chatbot.
+Single HTML file. No frameworks. No dependencies. Fork it, open it, pick an age + interest + project type, and get a ready-to-paste prompt that produces a working app in any AI chatbot.
 
-## Two versions, same spirit
+## Quick Start
 
-This project exists in two forms, both honoring the same idea: **a parent and a kid should be able to build something together in five minutes.**
+```
+git clone https://github.com/meimakes/pixelfoundery.com.git
+open index.html
+```
 
-### 📄 `index.html` — The single-file version (this repo)
+That's it. Pick your kid's age, what they love, what to build. Copy the prompt. Paste into Claude / ChatGPT / Gemini. Build together.
 
-One HTML file. No build step. No dependencies. No server. No API keys. Open it in a browser and it works.
+## What's Inside
 
-25+ handcrafted prompt templates across 6 categories (games, stories, art tools, science experiments, math puzzles, music makers), each designed to produce a complete single-file HTML project when pasted into any AI. The prompts themselves ask for single-file HTML — it's turtles all the way down.
+25+ handcrafted prompt templates across 6 categories:
 
-This is the version you can fork, run locally, or deploy anywhere. It's the spirit of the project distilled: simplicity as a feature, not a limitation.
+| Category | What it builds |
+|----------|---------------|
+| 🎮 Game | Tap-to-jump, catch, whack-a-mole, memory, racing |
+| 📖 Story | Choose-your-own-adventure, interactive storybooks, character creators |
+| 🎨 Art | Finger painting, pixel art, stamp tools, coloring pages |
+| 🔬 Science | Color mixing, plant growing, weather sim, physics playground |
+| 🧮 Math | Counting, shapes, bigger/smaller, addition, patterns |
+| 🎵 Music | Drum machine, piano, sound mixer, rhythm games, melody maker |
 
-### 🔮 [pixelfoundery.com](https://pixelfoundery.com) — The AI-powered version
+Every prompt produces a **single-file HTML project** — touch-friendly, sound effects via Web Audio API, no reading required, themed to whatever your kid is obsessed with right now.
 
-The live site is built on [Anything](https://anything.com) and generates prompts in real-time using Claude. Same interface, same inputs, but instead of drawing from a template library, it creates unique, tailored prompts every time.
+## Two Versions
 
-Same mission. One version trusts the templates. The other trusts the model. Both produce the same output: a prompt a parent can paste into Claude, ChatGPT, or Gemini and build something real with their kid.
+**This repo** — The static, forkable, zero-dependency version. 25+ templates, works offline, runs anywhere.
+
+**[pixelfoundery.com](https://pixelfoundery.com)** — The live version, built on [Anything](https://anything.com) with Claude Sonnet generating unique prompts in real-time. Same interface, infinite variety.
 
 ## How it works
 
