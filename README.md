@@ -7,7 +7,7 @@ Single HTML file. No frameworks. No dependencies. Fork it, open it, pick an age 
 ## Quick Start
 
 ```
-git clone https://github.com/meimakes/pixelfoundery.com.git
+git clone https://github.com/madebydia/pixelfoundery.com.git
 open index.html
 ```
 
@@ -71,4 +71,4 @@ Parents want to build with their kids using AI but don't know what to ask for. "
 - **Kid's games:** [madladstudios.com](https://madladstudios.com)
 - **More project ideas:** [toddlerlabs.com](https://toddlerlabs.com)
 
-Built by [@meimakes](https://x.com/meimakes)
+Built by [@madebydia](https://x.com/madebydia)
